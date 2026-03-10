@@ -21,10 +21,11 @@ async def home(request: Request):
 @app.get("/download-web")
 async def web_download(url: str, name_file: str, background_tasks: BackgroundTasks):
     filename = f"{name_file}.mp4"
-    options = {'format': 'best', 'outtmpl': filename}
+    options = {'format': 'best', 'outtmpl': filename, 'cookiefile': 'cookies.txt'}
 
     with yt_dlp.YoutubeDL(options) as ydl:
         ydl.download([url])
 
     background_tasks.add_task(os.remove, filename)
+
     return FileResponse(path=filename, filename=filename)
